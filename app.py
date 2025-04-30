@@ -1,5 +1,5 @@
 from flask import Flask, request
-from pyngrok import ngrok
+from pyngrok import ngrok, conf
 import requests
 import json
 import os
@@ -53,6 +53,7 @@ def line_webhook():
     return 'OK', 200
 
 if __name__ == "__main__":
+    conf.get_default().auth_token = os.environ.get("NGROK_AUTHTOKEN")
     public_url = ngrok.connect(5000)
     print(f"🌐 Ngrok tunnel running at: {public_url}/github-webhook")
     app.run(port=5000)

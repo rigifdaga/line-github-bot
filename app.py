@@ -21,8 +21,18 @@ def send_line_message(message):
             'text': message
         }]
     }
-    r = requests.post("https://api.line.me/v2/bot/message/push", headers=headers, data=json.dumps(body))
-    print(f"LINE response: {r.status_code} {r.text}")
+    try:
+        r = requests.post(
+            "https://api.line.me/v2/bot/message/push",
+            headers=headers,
+            data=json.dumps(body),
+            timeout=10  # tambahkan timeout
+        )
+        print(f"LINE response: {r.status_code} {r.text}")
+    except requests.exceptions.Timeout:
+        print("❌ Request ke LINE API timeout.")
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Error saat mengirim ke LINE API: {e}")
 
 @app.route("/github-webhook", methods=["POST"])
 def github_webhook():
